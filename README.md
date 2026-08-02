@@ -1,4 +1,6 @@
-# Verified Astrology
+# AstroLive Verified
+
+AstroLive is a fast-growing astrology consultation and divination platform where thousands of users connect via call and chat with astrologers every single day. AstroLive becomes your personal companion
 
 Build a mobile-first web app called AstroLive Verified.
 
