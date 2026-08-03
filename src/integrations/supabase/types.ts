@@ -14,16 +14,313 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      astrologers: {
+        Row: {
+          bio: string | null
+          created_at: string
+          id: string
+          specialties: string[]
+          total_predictions: number
+          trust_score: number
+          updated_at: string
+          user_id: string
+          verified_predictions: number
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          specialties?: string[]
+          total_predictions?: number
+          trust_score?: number
+          updated_at?: string
+          user_id: string
+          verified_predictions?: number
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          specialties?: string[]
+          total_predictions?: number
+          trust_score?: number
+          updated_at?: string
+          user_id?: string
+          verified_predictions?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "astrologers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_entries: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          mood: Database["public"]["Enums"]["mood_type"]
+          note: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          id?: string
+          mood?: Database["public"]["Enums"]["mood_type"]
+          note?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          mood?: Database["public"]["Enums"]["mood_type"]
+          note?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prediction_templates: {
+        Row: {
+          created_at: string
+          id: string
+          specialty: string
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          specialty: string
+          text: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          specialty?: string
+          text?: string
+        }
+        Relationships: []
+      }
+      predictions: {
+        Row: {
+          astrologer_id: string
+          check_in_due_at: string
+          created_at: string
+          id: string
+          outcome: Database["public"]["Enums"]["prediction_outcome"]
+          text: string
+          user_id: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          astrologer_id: string
+          check_in_due_at?: string
+          created_at?: string
+          id?: string
+          outcome?: Database["public"]["Enums"]["prediction_outcome"]
+          text: string
+          user_id?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          astrologer_id?: string
+          check_in_due_at?: string
+          created_at?: string
+          id?: string
+          outcome?: Database["public"]["Enums"]["prediction_outcome"]
+          text?: string
+          user_id?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictions_astrologer_id_fkey"
+            columns: ["astrologer_id"]
+            isOneToOne: false
+            referencedRelation: "astrologers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "predictions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      share_cards: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          prediction_id: string
+          share_count: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          prediction_id: string
+          share_count?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          prediction_id?: string
+          share_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "share_cards_prediction_id_fkey"
+            columns: ["prediction_id"]
+            isOneToOne: false
+            referencedRelation: "predictions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          id: string
+          renews_at: string | null
+          started_at: string
+          tier: Database["public"]["Enums"]["subscription_tier"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          renews_at?: string | null
+          started_at?: string
+          tier?: Database["public"]["Enums"]["subscription_tier"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          renews_at?: string | null
+          started_at?: string
+          tier?: Database["public"]["Enums"]["subscription_tier"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string
+          dob: string | null
+          id: string
+          name: string | null
+          place_of_birth: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          tob: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          dob?: string | null
+          id: string
+          name?: string | null
+          place_of_birth?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          tob?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          dob?: string | null
+          id?: string
+          name?: string | null
+          place_of_birth?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          tob?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      register_share: {
+        Args: { _image_url?: string; _prediction_id: string }
+        Returns: {
+          created_at: string
+          id: string
+          image_url: string | null
+          prediction_id: string
+          share_count: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "share_cards"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      resolve_prediction: {
+        Args: {
+          _outcome: Database["public"]["Enums"]["prediction_outcome"]
+          _prediction_id: string
+        }
+        Returns: {
+          astrologer_id: string
+          check_in_due_at: string
+          created_at: string
+          id: string
+          outcome: Database["public"]["Enums"]["prediction_outcome"]
+          text: string
+          user_id: string | null
+          verified_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "predictions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
-      [_ in never]: never
+      mood_type: "happy" | "neutral" | "sad"
+      prediction_outcome: "pending" | "true" | "false"
+      subscription_tier: "free" | "verified_plus"
+      user_role: "user" | "astrologer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +447,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      mood_type: ["happy", "neutral", "sad"],
+      prediction_outcome: ["pending", "true", "false"],
+      subscription_tier: ["free", "verified_plus"],
+      user_role: ["user", "astrologer"],
+    },
   },
 } as const
