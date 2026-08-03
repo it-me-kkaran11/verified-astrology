@@ -26,6 +26,16 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(astrologersQuery());
   },
   component: Landing,
+  errorComponent: () => (
+    <div className="starfield flex min-h-screen items-center justify-center p-6 text-center text-sm text-muted-foreground">
+      Trust Scores couldn't load right now. Try refreshing.
+    </div>
+  ),
+  notFoundComponent: () => (
+    <div className="starfield flex min-h-screen items-center justify-center p-6 text-center text-sm text-muted-foreground">
+      Page not found.
+    </div>
+  ),
 });
 
 const steps = [
