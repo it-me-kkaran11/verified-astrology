@@ -13,10 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AstraRouteImport } from './routes/astra'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as HomeRouteImport } from './routes/home'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 
 const IndexRoute = IndexRouteImport.update({
@@ -38,11 +37,6 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
@@ -53,10 +47,10 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
@@ -68,20 +62,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/astra': typeof AstraRoute
   '/auth': typeof AuthRoute
-  '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/pricing': typeof PricingRoute
-  '/profile': typeof ProfileRoute
+  '/home': typeof AuthenticatedHomeRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/astra': typeof AstraRoute
   '/auth': typeof AuthRoute
-  '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/pricing': typeof PricingRoute
-  '/profile': typeof ProfileRoute
+  '/home': typeof AuthenticatedHomeRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
 }
 export interface FileRoutesById {
@@ -90,10 +82,9 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/astra': typeof AstraRoute
   '/auth': typeof AuthRoute
-  '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/pricing': typeof PricingRoute
-  '/profile': typeof ProfileRoute
+  '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
 }
 export interface FileRouteTypes {
@@ -102,20 +93,18 @@ export interface FileRouteTypes {
     | '/'
     | '/astra'
     | '/auth'
-    | '/home'
     | '/leaderboard'
     | '/pricing'
-    | '/profile'
+    | '/home'
     | '/onboarding'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/astra'
     | '/auth'
-    | '/home'
     | '/leaderboard'
     | '/pricing'
-    | '/profile'
+    | '/home'
     | '/onboarding'
   id:
     | '__root__'
@@ -123,10 +112,9 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/astra'
     | '/auth'
-    | '/home'
     | '/leaderboard'
     | '/pricing'
-    | '/profile'
+    | '/_authenticated/home'
     | '/_authenticated/onboarding'
   fileRoutesById: FileRoutesById
 }
@@ -135,10 +123,8 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AstraRoute: typeof AstraRoute
   AuthRoute: typeof AuthRoute
-  HomeRoute: typeof HomeRoute
   LeaderboardRoute: typeof LeaderboardRoute
   PricingRoute: typeof PricingRoute
-  ProfileRoute: typeof ProfileRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,13 +157,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/leaderboard': {
       id: '/leaderboard'
       path: '/leaderboard'
@@ -192,12 +171,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/onboarding': {
       id: '/_authenticated/onboarding'
@@ -210,10 +189,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
 }
 
@@ -225,10 +206,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AstraRoute: AstraRoute,
   AuthRoute: AuthRoute,
-  HomeRoute: HomeRoute,
   LeaderboardRoute: LeaderboardRoute,
   PricingRoute: PricingRoute,
-  ProfileRoute: ProfileRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
