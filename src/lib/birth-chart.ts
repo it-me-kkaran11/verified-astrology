@@ -14,7 +14,7 @@ const ZODIAC: ZodiacEntry[] = [
   { name: "Scorpio", from: [10, 23], element: "water" },
   { name: "Sagittarius", from: [11, 22], element: "fire" },
   { name: "Capricorn", from: [12, 22], element: "earth" },
-] as const;
+];
 
 const SIGNS = [
   "Aries",
