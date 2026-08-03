@@ -1,4 +1,6 @@
-const ZODIAC = [
+type ZodiacEntry = { name: string; from: [number, number]; element: string };
+
+const ZODIAC: ZodiacEntry[] = [
   { name: "Capricorn", from: [1, 1], element: "earth" },
   { name: "Aquarius", from: [1, 20], element: "air" },
   { name: "Pisces", from: [2, 19], element: "water" },
