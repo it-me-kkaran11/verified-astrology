@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ClipboardCheck, Scale, ShieldCheck } from "lucide-react";
 
-import { VerifiedBadge, TrustScore } from "@/components/VerifiedBadge";
-import { astrologers } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+
+import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { astrologersQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,7 +22,20 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(astrologersQuery());
+  },
   component: Landing,
+  errorComponent: () => (
+    <div className="starfield flex min-h-screen items-center justify-center p-6 text-center text-sm text-muted-foreground">
+      Trust Scores couldn't load right now. Try refreshing.
+    </div>
+  ),
+  notFoundComponent: () => (
+    <div className="starfield flex min-h-screen items-center justify-center p-6 text-center text-sm text-muted-foreground">
+      Page not found.
+    </div>
+  ),
 });
 
 const steps = [
@@ -42,6 +57,8 @@ const steps = [
 ];
 
 function Landing() {
+  const { data: astrologers = [] } = useQuery(astrologersQuery());
+
   return (
     <div className="starfield min-h-screen">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-5 py-6">
@@ -104,9 +121,16 @@ function Landing() {
                 <span className="w-5 text-sm font-bold text-muted-foreground">{i + 1}</span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{a.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">{a.specialty}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {a.specialties.join(" · ")}
+                  </p>
                 </div>
-                <TrustScore score={a.trustScore} size="sm" />
+                <span className="flex shrink-0 items-center gap-1.5">
+                  <VerifiedBadge size="sm" />
+                  <span className="text-sm font-bold tabular-nums text-gold-gradient">
+                    {a.trust_score.toFixed(1)}%
+                  </span>
+                </span>
               </li>
             ))}
           </ul>

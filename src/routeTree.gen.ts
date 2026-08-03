@@ -10,16 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AstraRouteImport } from './routes/astra'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as HomeRouteImport } from './routes/home'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AstrologerAstrologerIdRouteImport } from './routes/astrologer.$astrologerId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AstraRoute = AstraRouteImport.update({
@@ -32,11 +39,6 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
@@ -47,9 +49,24 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AstrologerAstrologerIdRoute = AstrologerAstrologerIdRouteImport.update({
+  id: '/astrologer/$astrologerId',
+  path: '/astrologer/$astrologerId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -57,29 +74,36 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/astra': typeof AstraRoute
   '/auth': typeof AuthRoute
-  '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/pricing': typeof PricingRoute
-  '/profile': typeof ProfileRoute
+  '/home': typeof AuthenticatedHomeRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/astrologer/$astrologerId': typeof AstrologerAstrologerIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/astra': typeof AstraRoute
   '/auth': typeof AuthRoute
-  '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/pricing': typeof PricingRoute
-  '/profile': typeof ProfileRoute
+  '/home': typeof AuthenticatedHomeRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/astrologer/$astrologerId': typeof AstrologerAstrologerIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/astra': typeof AstraRoute
   '/auth': typeof AuthRoute
-  '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/pricing': typeof PricingRoute
-  '/profile': typeof ProfileRoute
+  '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/astrologer/$astrologerId': typeof AstrologerAstrologerIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,38 +111,45 @@ export interface FileRouteTypes {
     | '/'
     | '/astra'
     | '/auth'
-    | '/home'
     | '/leaderboard'
     | '/pricing'
+    | '/home'
+    | '/onboarding'
     | '/profile'
+    | '/astrologer/$astrologerId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/astra'
     | '/auth'
-    | '/home'
     | '/leaderboard'
     | '/pricing'
+    | '/home'
+    | '/onboarding'
     | '/profile'
+    | '/astrologer/$astrologerId'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/astra'
     | '/auth'
-    | '/home'
     | '/leaderboard'
     | '/pricing'
-    | '/profile'
+    | '/_authenticated/home'
+    | '/_authenticated/onboarding'
+    | '/_authenticated/profile'
+    | '/astrologer/$astrologerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AstraRoute: typeof AstraRoute
   AuthRoute: typeof AuthRoute
-  HomeRoute: typeof HomeRoute
   LeaderboardRoute: typeof LeaderboardRoute
   PricingRoute: typeof PricingRoute
-  ProfileRoute: typeof ProfileRoute
+  AstrologerAstrologerIdRoute: typeof AstrologerAstrologerIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -128,6 +159,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/astra': {
@@ -144,13 +182,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/leaderboard': {
       id: '/leaderboard'
       path: '/leaderboard'
@@ -165,35 +196,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
       path: '/profile'
       fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/astrologer/$astrologerId': {
+      id: '/astrologer/$astrologerId'
+      path: '/astrologer/$astrologerId'
+      fullPath: '/astrologer/$astrologerId'
+      preLoaderRoute: typeof AstrologerAstrologerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AstraRoute: AstraRoute,
   AuthRoute: AuthRoute,
-  HomeRoute: HomeRoute,
   LeaderboardRoute: LeaderboardRoute,
   PricingRoute: PricingRoute,
-  ProfileRoute: ProfileRoute,
+  AstrologerAstrologerIdRoute: AstrologerAstrologerIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
