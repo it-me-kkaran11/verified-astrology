@@ -40,7 +40,7 @@ export const Route = createFileRoute("/leaderboard")({
 });
 
 function Leaderboard() {
-  const { data: astrologers = [] } = useQuery(astrologersQuery());
+  const { data: astrologers = [], isLoading } = useQuery(astrologersQuery());
   const [specialty, setSpecialty] = useState<Specialty | "all">("all");
   const [sortBy, setSortBy] = useState<"trust_score" | "total_predictions">("trust_score");
 
