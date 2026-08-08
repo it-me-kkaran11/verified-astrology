@@ -31,8 +31,11 @@ function Profile() {
   const { user } = useSessionUser();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data: profile } = useQuery(myProfileQuery(user?.id));
-  const { data: predictions = [] } = useQuery(myPredictionsQuery(user?.id));
+  const { data: profile, isLoading: loadingProfile } = useQuery(myProfileQuery(user?.id));
+  const { data: predictions = [], isLoading: loadingPredictions } = useQuery(
+    myPredictionsQuery(user?.id),
+  );
+  const isLoading = !user || loadingProfile || loadingPredictions;
 
   const chart = profile ? birthChartSummary(profile) : null;
   const resolved = predictions.filter((p) => p.outcome !== "pending");
@@ -52,12 +55,33 @@ function Profile() {
     .filter((a): a is NonNullable<typeof a> => Boolean(a))
     .filter((a, i, arr) => arr.findIndex((b) => b.id === a.id) === i);
 
+  if (isLoading) {
+    return (
+      <AppShell title="Profile" subtitle="Your record">
+        <div className="mx-auto max-w-2xl space-y-4">
+          <div className="glass-card h-24 animate-pulse p-5" />
+          <div className="grid grid-cols-3 gap-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="glass-card h-20 animate-pulse" />
+            ))}
+          </div>
+          <div className="glass-card h-40 animate-pulse" />
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell
       title="Profile"
       subtitle={chart ? `${chart.sun} ☉ / ${chart.moon} ☾ / ${chart.rising} ↑` : "Your record"}
     >
       <div className="mx-auto max-w-2xl space-y-4">
+        {predictions.length === 0 ? (
+          <div className="glass-card p-5 text-center text-sm text-muted-foreground">
+            No predictions on your record yet — log one in Astra and your ledger starts there.
+          </div>
+        ) : null}
         <div className="glass-card flex items-center gap-4 p-5">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/45 text-lg font-bold">
             {initials(profile?.name ?? "AL")}
