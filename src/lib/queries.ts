@@ -166,3 +166,96 @@ export function checkInStreak(verifiedAt: (string | null)[]): number {
   }
   return streak;
 }
+
+export const mySubscriptionQuery = (userId: string | undefined) =>
+  queryOptions({
+    queryKey: ["subscription", userId],
+    enabled: Boolean(userId),
+    queryFn: async () => {
+      if (!userId) return null;
+      const { data, error } = await supabase
+        .from("subscriptions")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+/** Mock payment: flips the logged-in user's subscription tier. */
+export async function setSubscriptionTier(
+  userId: string,
+  tier: Database["public"]["Enums"]["subscription_tier"],
+) {
+  const { data: existing } = await supabase
+    .from("subscriptions")
+    .select("id")
+    .eq("user_id", userId)
+    .limit(1)
+    .maybeSingle();
+
+  if (existing) {
+    const { data, error } = await supabase
+      .from("subscriptions")
+      .update({
+        tier,
+        started_at: new Date().toISOString(),
+        renews_at:
+          tier === "verified_plus"
+            ? new Date(Date.now() + 30 * 86400000).toISOString()
+            : null,
+      })
+      .eq("id", existing.id)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .insert({ user_id: userId, tier })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+/** Log a prediction the user received in a consultation elsewhere. */
+export async function logPrediction(input: {
+  userId: string;
+  astrologerId: string;
+  text: string;
+  checkInDueAt: string;
+}) {
+  const { data, error } = await supabase
+    .from("predictions")
+    .insert({
+      user_id: input.userId,
+      astrologer_id: input.astrologerId,
+      text: input.text,
+      check_in_due_at: new Date(input.checkInDueAt).toISOString(),
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function submitPartnerLead(input: {
+  name: string;
+  company: string;
+  email: string;
+  message?: string;
+}) {
+  const { error } = await supabase.from("partner_leads").insert({
+    name: input.name,
+    company: input.company,
+    email: input.email,
+    message: input.message ?? null,
+  });
+  if (error) throw error;
+}
