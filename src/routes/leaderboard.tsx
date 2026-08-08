@@ -91,10 +91,23 @@ function Leaderboard() {
           </div>
         </div>
 
-        {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No astrologers match that specialty yet.
-          </p>
+        {isLoading ? (
+          <div className="space-y-3">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="glass-card h-20 animate-pulse p-4" />
+            ))}
+          </div>
+        ) : null}
+
+        {!isLoading && rows.length === 0 ? (
+          <div className="glass-card p-8 text-center">
+            <p className="text-lg font-bold">No verified records yet</p>
+            <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+              {astrologers.length === 0
+                ? "The leaderboard fills up as astrologers log predictions and users confirm them."
+                : "No astrologers match that specialty yet — try another filter."}
+            </p>
+          </div>
         ) : null}
 
         {rows.map((a, i) => {
