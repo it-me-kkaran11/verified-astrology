@@ -96,6 +96,36 @@ export type Database = {
           },
         ]
       }
+      partner_leads: {
+        Row: {
+          company: string
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       prediction_templates: {
         Row: {
           created_at: string
