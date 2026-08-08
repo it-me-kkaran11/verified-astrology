@@ -31,8 +31,11 @@ function Profile() {
   const { user } = useSessionUser();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data: profile } = useQuery(myProfileQuery(user?.id));
-  const { data: predictions = [] } = useQuery(myPredictionsQuery(user?.id));
+  const { data: profile, isLoading: loadingProfile } = useQuery(myProfileQuery(user?.id));
+  const { data: predictions = [], isLoading: loadingPredictions } = useQuery(
+    myPredictionsQuery(user?.id),
+  );
+  const isLoading = !user || loadingProfile || loadingPredictions;
 
   const chart = profile ? birthChartSummary(profile) : null;
   const resolved = predictions.filter((p) => p.outcome !== "pending");
