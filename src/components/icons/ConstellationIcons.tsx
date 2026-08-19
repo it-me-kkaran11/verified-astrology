@@ -337,5 +337,6 @@ export function ConstellationIcon({
 
 export const iconFor = (name: ConstellationIconName) =>
   function Icon({ className }: { className?: string }) {
-    return <ConstellationIcon name={name} className={className} />;
+    return <ConstellationIcon name={name} className={className ?? ""} />;
   };
+
