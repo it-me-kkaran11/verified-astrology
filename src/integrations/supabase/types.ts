@@ -58,6 +58,62 @@ export type Database = {
           },
         ]
       }
+      circle_posts: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          score_type: Database["public"]["Enums"]["circle_score_type"]
+          score_value: number
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          score_type?: Database["public"]["Enums"]["circle_score_type"]
+          score_value: number
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          score_type?: Database["public"]["Enums"]["circle_score_type"]
+          score_value?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      circle_resonances: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "circle_resonances_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "circle_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journal_entries: {
         Row: {
           created_at: string
@@ -347,6 +403,7 @@ export type Database = {
       }
     }
     Enums: {
+      circle_score_type: "trust_confirmation" | "daily_energy"
       mood_type: "happy" | "neutral" | "sad"
       prediction_outcome: "pending" | "true" | "false"
       subscription_tier: "free" | "verified_plus"
@@ -478,6 +535,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      circle_score_type: ["trust_confirmation", "daily_energy"],
       mood_type: ["happy", "neutral", "sad"],
       prediction_outcome: ["pending", "true", "false"],
       subscription_tier: ["free", "verified_plus"],
